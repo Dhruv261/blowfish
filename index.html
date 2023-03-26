@@ -1,0 +1,112 @@
+<html>
+  <head>
+    <title>Blowfish Cypher</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+
+    <script type="text/javascript" src="blowfish.js"></script>
+  </head>
+  <body>
+    <h1 class="h1 lonely-text">BLOWFISH CYPHER</h1>
+    <form class="form-container">
+      <div>
+        <textarea
+          class="input-text-area na-resize"
+          name="text"
+          rows="12"
+          cols="70"
+          placeholder="Message (for encryption) OR (for decryption):"
+        ></textarea
+        ><br />
+      </div>
+      <div class="password-container">
+        <p class="lonely-text e-y-password">Enter Your password</p>
+        <input type="text" name="password" class="pasword-text-area" /><br />
+        <div class="button-container">
+          <input
+            type="submit"
+            name="encrypt"
+            value="Encrypt"
+            class="button button1"
+          />
+
+          <input
+            type="submit"
+            name="decrypt"
+            value="Decrypt"
+            class="button button2"
+          />
+        </div>
+      </div>
+      <div>
+        <textarea
+          class="output-text-area lonely-text na-resize"
+          name="result"
+          rows="12"
+          cols="70"
+          placeholder="Encrypted message"
+        ></textarea>
+      </div>
+    </form>
+
+    <script type="text/javascript">
+      window.addEventListener('DOMContentLoaded', function () {
+        // get the encrypt form and add a submit event listener to prevent the default behavior
+        var encryptForm = document.querySelector('input[name=encrypt]').form;
+        encryptForm.addEventListener('submit', function (event) {
+          event.preventDefault();
+        });
+
+        // get the encrypt button and add a click event listener
+        var encryptButton = document.querySelector('input[name=encrypt]');
+        encryptButton.addEventListener('click', function (event) {
+          try {
+            var key = document.querySelector('input[name=password]').value;
+            var text = document.querySelector('textarea[name=text]').value;
+            var bf = new BlowFishCipher(key);
+
+            var res = bf.encrypt(text);
+            res = bf.base64Encode(res);
+
+            document.querySelector('textarea[name=result]').value = res;
+          } catch (ex) {
+            if (window.console && console.log) {
+              console.log(ex);
+            }
+          }
+
+          return false;
+        });
+
+        // get the decrypt button and add a click event listener
+        var decryptButton = document.querySelector('input[name=decrypt]');
+        decryptButton.addEventListener('click', function (event) {
+          try {
+            var key = document.querySelector('input[name=password]').value;
+            var text = document.querySelector('textarea[name=text]').value;
+            var bf = new BlowFishCipher(key);
+
+            text = bf.base64Decode(text);
+
+            var res = bf.decrypt(text);
+            res = bf.trimZeros(res);
+
+            document.querySelector('textarea[name=result]').value = res;
+          } catch (ex) {
+            if (window.console && console.log) {
+              console.log(ex);
+            }
+          }
+
+          return false;
+        });
+      });
+    </script>
+  </body>
+</html>
